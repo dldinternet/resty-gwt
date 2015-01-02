@@ -36,7 +36,11 @@
     <servlet-name>jsonp-service</servlet-name>
     <servlet-class>org.fusesource.restygwt.examples.server.JsonpServlet</servlet-class>
   </servlet>
-   
+    <servlet>
+        <servlet-name>jUnitHostImpl</servlet-name>
+        <servlet-class>com.google.gwt.junit.server.JUnitHostImpl</servlet-class>
+    </servlet>
+
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/method</url-pattern></servlet-mapping> 
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/fail</url-pattern></servlet-mapping> 
   <servlet-mapping><servlet-name>test-service</servlet-name><url-pattern>/ui/test/JSONBinding/getListOfStrings</url-pattern></servlet-mapping> 
@@ -44,6 +48,10 @@
 
   <servlet-mapping><servlet-name>jsonp-service</servlet-name><url-pattern>/ui/jsonp-service</url-pattern></servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>pizza-service</servlet-name>
+        <url-pattern>/ui/pizza-service/ping</url-pattern>
+    </servlet-mapping>
   <servlet-mapping>
     <servlet-name>pizza-service</servlet-name>
     <url-pattern>/ui/pizza-service</url-pattern>
@@ -52,8 +60,12 @@
     <servlet-name>pizza-service</servlet-name>
     <url-pattern>/ui/pizza-service/toppings</url-pattern>
   </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>jUnitHostImpl</servlet-name>
+        <url-pattern>/ui/junithost/*</url-pattern>
+    </servlet-mapping>
 
-  <welcome-file-list>
+    <welcome-file-list>
     <welcome-file>ui/ui.html</welcome-file>
   </welcome-file-list>
 </web-app>

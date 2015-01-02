@@ -61,7 +61,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.server.Base64Utils;
 
 public class EncoderDecoderTestGwt extends GWTTestCase {
 

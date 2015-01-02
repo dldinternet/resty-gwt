@@ -19,7 +19,6 @@
 package org.fusesource.restygwt.client.basic;
 
 import com.google.gwt.jsonp.client.JsonpRequest;
-import java.util.List;
 
 import org.fusesource.restygwt.client.JSONP;
 import org.fusesource.restygwt.client.MethodCallback;

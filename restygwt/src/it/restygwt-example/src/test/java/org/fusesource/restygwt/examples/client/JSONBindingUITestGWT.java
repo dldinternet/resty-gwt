@@ -23,9 +23,7 @@ import java.util.List;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.examples.client.JSONBindingService;
 import org.fusesource.restygwt.examples.client.JSONBindingService.StringMapResponse;
-import org.junit.Before;
 
 import com.google.gwt.core.client.GWT;
 

@@ -20,7 +20,6 @@ package org.fusesource.restygwt.examples.client;
 
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.examples.client.MethodService;
 
 import com.google.gwt.core.client.GWT;
 

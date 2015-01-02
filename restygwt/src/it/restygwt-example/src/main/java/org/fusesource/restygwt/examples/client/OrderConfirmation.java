@@ -20,8 +20,6 @@ package org.fusesource.restygwt.examples.client;
 
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * 
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
@@ -43,14 +41,27 @@ public class OrderConfirmation {
 
     }
 
+    public String toString(String br) {
+        return "Order ID: " + order_id + br +
+                "Pizza Order: " + order.toString() + br +
+                "Price: " + price + br +
+                "Ready: " + ready_time + br
+                ;
+    }
+
+    public String toHTML() {
+        return toString("<br>\n");
+    }
+
     @Override
     public String toString() {
-        if (GWT.isClient()) {
-            // Shows how to access the code generated json encoder/decoder.
-            // Only works in client code, won't work on the server side.
-            OrderConfirmationJED jed = GWT.create(OrderConfirmationJED.class);
-            return jed.encode(this).toString();
-        }
-        return super.toString();
+        return toString("\n");
+//        if (GWT.isClient()) {
+//            // Shows how to access the code generated json encoder/decoder.
+//            // Only works in client code, won't work on the server side.
+//            OrderConfirmationJED jed = GWT.create(OrderConfirmationJED.class);
+//            return jed.encode(this).toString();
+//        }
+//        return super.toString();
     }
 }

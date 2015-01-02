@@ -21,8 +21,6 @@ package org.fusesource.restygwt.examples.client;
 import org.fusesource.restygwt.client.JsonCallback;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.examples.client.Pizza;
-import org.fusesource.restygwt.examples.client.PizzaOrder;
 import org.fusesource.restygwt.examples.client.PizzaOrder.PizzaOrderJED;
 
 import com.google.gwt.core.client.GWT;

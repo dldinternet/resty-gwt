@@ -150,6 +150,7 @@ public abstract class BaseSourceCreator extends AbstractSourceCreator {
         this.sourceWriter.println(value);
 
         // System.out.println(value);
+        // Logger.getLogger("RestyGWT").log(Level.INFO, value);
         return this;
     }
 

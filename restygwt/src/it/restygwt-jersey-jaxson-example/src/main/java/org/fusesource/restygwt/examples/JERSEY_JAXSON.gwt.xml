@@ -23,5 +23,5 @@
   <inherits name='com.google.gwt.user.User' />
   <inherits name="org.fusesource.restygwt.RestyGWT" />
   
-  <servlet path='/rest' class='org.fusesource.restygwt.examples.server.JerseyServlet'/>  
+  <servlet path='/rest' class='org.fusesource.restygwt.examples.server.JerseyServlet'/>
 </module>

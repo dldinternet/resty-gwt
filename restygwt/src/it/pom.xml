@@ -22,9 +22,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <gwt-version>2.6.1</gwt-version>
+        <project-version>1.4</project-version>
+    </properties>
+
   <groupId>org.fusesource.restygwt</groupId>
   <artifactId>restygwt-it-parent</artifactId>
-  <version>@project.version@</version>
+  <version>1.4</version>
   <packaging>pom</packaging>
 
   <name>RestyGWT Parent for ITs</name>
@@ -60,9 +65,6 @@
     </repository>
   </repositories>
 -->
-  <properties>
-    <gwt-version>@gwt-version@</gwt-version>
-  </properties>
 
   <dependencies>
   
@@ -81,7 +83,7 @@
     <dependency>
       <groupId>org.fusesource.restygwt</groupId>
       <artifactId>restygwt</artifactId>
-      <version>@project.version@</version>
+      <version>${project-version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -100,6 +102,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>

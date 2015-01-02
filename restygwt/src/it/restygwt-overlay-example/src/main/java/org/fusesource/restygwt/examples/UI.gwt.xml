@@ -25,14 +25,14 @@
   <inherits name='com.google.gwt.user.User' />
   <inherits name="org.fusesource.restygwt.RestyGWT" />
 
-  <servlet path='/pizza-service' class='org.fusesource.restygwt.examples.server.PizzaServlet'/>
-  <servlet path='/jsonp-service' class='org.fusesource.restygwt.examples.server.JsonpServlet'/>
-  <servlet path='/test/method' class='org.fusesource.restygwt.examples.server.TestServlet'/>
-  <servlet path='/test/fail' class='org.fusesource.restygwt.examples.server.TestServlet'/>
-  <servlet path='/test/JSONBinding/getListOfStrings' class='org.fusesource.restygwt.examples.server.TestServlet'/>
-  <servlet path='/test/JSONBinding/getStringMapResponse' class='org.fusesource.restygwt.examples.server.TestServlet'/>
+  <servlet path='/pizza-service' class='com.dldinternet.aws.cfn.stacker.server.PizzaServlet'/>
+  <servlet path='/jsonp-service' class='com.dldinternet.aws.cfn.stacker.server.JsonpServlet'/>
+  <servlet path='/test/method' class='com.dldinternet.aws.cfn.stacker.server.TestServlet'/>
+  <servlet path='/test/fail' class='com.dldinternet.aws.cfn.stacker.server.TestServlet'/>
+  <servlet path='/test/JSONBinding/getListOfStrings' class='com.dldinternet.aws.cfn.stacker.server.TestServlet'/>
+  <servlet path='/test/JSONBinding/getStringMapResponse' class='com.dldinternet.aws.cfn.stacker.server.TestServlet'/>
 
-  <entry-point class='org.fusesource.restygwt.examples.client.UI'/>
+  <entry-point class='com.dldinternet.restygwt.examples.client.UI'/>
   <stylesheet src='ui.css' />
 
 </module>

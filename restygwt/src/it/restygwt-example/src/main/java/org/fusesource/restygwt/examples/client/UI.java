@@ -35,6 +35,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
@@ -46,6 +50,9 @@ public class UI implements EntryPoint {
      * This is the entry point method.
      */
     public void onModuleLoad() {
+        Logger logger = Logger.getLogger("RestyGWT");
+        logger.setLevel(Level.ALL);
+
         Button button = new Button("Place Pizza Order");
         button.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -89,6 +96,18 @@ public class UI implements EntryPoint {
         PizzaService service = GWT.create(PizzaService.class);
         Resource resource = new Resource(GWT.getModuleBaseURL() + "pizza-service");
         ((RestServiceProxy) service).setResource(resource);
+
+        service.listToppings(new MethodCallback<List<Topping>>() {
+            public void onFailure(Method method, Throwable exception) {
+                Window.alert("Error: " + exception);
+            }
+
+            @Override
+            public void onSuccess(Method method, List<Topping> response) {
+                for (Topping topping : response)
+                    RootPanel.get().add(new Label("got topping: " + topping.name + " $" + topping.price));
+            }
+        });
 
         PizzaOrder order = new PizzaOrder();
         order.delivery = true;

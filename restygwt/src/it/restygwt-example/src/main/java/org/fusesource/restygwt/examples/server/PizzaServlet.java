@@ -18,6 +18,7 @@
 
 package org.fusesource.restygwt.examples.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -47,10 +48,24 @@ public class PizzaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         System.out.println("Processing Pizza Order...");
+        StringBuffer jb = new StringBuffer();
+        String line = null;
+        try {
+            BufferedReader reader = req.getReader();
+            while ((line = reader.readLine()) != null)
+                jb.append(line);
+        } catch (Exception e) {
+            /*report an error*/
+            System.out.println("Error while reading the Pizza Order ...");
+        }
+
+        System.out.println("Processing Pizza Order...");
+        System.out.println(jb.toString());
         try {
 
             ObjectMapper mapper = new ObjectMapper();
-            PizzaOrder order = mapper.readValue(req.getInputStream(), PizzaOrder.class);
+            PizzaOrder order = null;
+            order = mapper.readValue(jb.toString(), PizzaOrder.class);
 
             StringWriter sw = new StringWriter();
             mapper.writeValue(sw, order);
@@ -84,7 +99,7 @@ public class PizzaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        System.out.println("Processing Toppings Listing");
+            System.out.println("Processing Toppings Listing");
         try {
             ObjectMapper mapper = new ObjectMapper();
 

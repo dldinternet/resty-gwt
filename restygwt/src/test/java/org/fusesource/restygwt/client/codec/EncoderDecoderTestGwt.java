@@ -61,6 +61,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
+import javax.xml.bind.annotation.XmlTransient;
 
 public class EncoderDecoderTestGwt extends GWTTestCase {
 
@@ -723,6 +724,9 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         
         @JsonIgnore
         String noAge;
+		
+		@XmlTransient
+        int noAgeJax;
         
         @JsonIgnore
         private String lastName;
@@ -767,6 +771,7 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         CCCCodec cccc = GWT.create(CCCCodec.class);
         CCC ccc = new CCC();
         ccc.age = 20;
+		ccc.noAgeJax = 12;
         ccc.name = "me and the corner";
         ccc.firstName = "chaos";
         ccc.lastName = "club";
@@ -852,6 +857,9 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         @JsonIgnore
         private int myAge = 123;
 
+		@XmlTransient
+        private int myAgeJax = 123;
+		
         int getAge(){
             return myAge;
         }
@@ -1177,12 +1185,16 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
     }
     
     @JsonTypeInfo(use = Id.CLASS, include = As.PROPERTY, property = "@class")
-    @JsonSubTypes({ @Type(DefaultImplementationOfSubTypeInterface.class) })
+    @JsonSubTypes({ @Type(DefaultImplementationOfSubTypeInterface.class),
+		@Type(SecondImplementationOfSubTypeInterface.class)})
     interface JsonSubTypesWithAnInterface {
         String getValue();
     }
     
-    static class DefaultImplementationOfSubTypeInterface implements JsonSubTypesWithAnInterface {
+    static abstract class AbstractSubType implements JsonSubTypesWithAnInterface {
+    }
+
+    static class DefaultImplementationOfSubTypeInterface extends AbstractSubType {
 
         private String value;
 
@@ -1196,8 +1208,19 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
             return value;
         }
     }
+
+    static class SecondImplementationOfSubTypeInterface extends AbstractSubType {
+
+        public String value;
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+    }
     
     static interface JsonSubTypesWithAnInterfaceCodec extends JsonEncoderDecoder<JsonSubTypesWithAnInterface> {}
+    static interface JsonSubTypesWithAnInterfaceImplementationCodec extends JsonEncoderDecoder<DefaultImplementationOfSubTypeInterface> {}
 
     public void testJsonSubTypesWithAnInterface() {
         JsonSubTypesWithAnInterfaceCodec codec = GWT.create(JsonSubTypesWithAnInterfaceCodec.class);
@@ -1205,10 +1228,28 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         JsonSubTypesWithAnInterface o1 = new DefaultImplementationOfSubTypeInterface(value);
 
         JSONValue json = codec.encode(o1);
+        assertEquals(json.isObject().get("@class").isString().stringValue(),
+                DefaultImplementationOfSubTypeInterface.class.getName().replace("$","."));
         JsonSubTypesWithAnInterface o2 = codec.decode(json);
         assertEquals(json.toString(), codec.encode(o2).toString());
         assertEquals(value, o1.getValue());
         assertEquals(o1.getValue(), o2.getValue());
+        assertEquals(o2.getClass(), DefaultImplementationOfSubTypeInterface.class);
+    }
+
+    public void testJsonSubTypesWithInterfaceUsingConcreteImplementationCodec() {
+        JsonSubTypesWithAnInterfaceImplementationCodec codec = GWT.create(JsonSubTypesWithAnInterfaceImplementationCodec.class);
+        String value = "Hello, world!";
+        DefaultImplementationOfSubTypeInterface o1 = new DefaultImplementationOfSubTypeInterface(value);
+
+        JSONValue json = codec.encode(o1);
+        JSONValue objectClass = json.isObject().get("@class");
+        assertNotNull(objectClass);
+        assertEquals(objectClass.isString().stringValue(),
+                DefaultImplementationOfSubTypeInterface.class.getName().replace("$","."));
+        DefaultImplementationOfSubTypeInterface o2 = codec.decode(json);
+        assertEquals(json.toString(), codec.encode(o2).toString());
+        assertEquals(value, o1.getValue());
     }
     
 
@@ -1232,4 +1273,5 @@ public class EncoderDecoderTestGwt extends GWTTestCase {
         JsonSubTypesWithAnInterfaceForUseWithAnEnum useWithAnEnum = codec.decode(json);
         assertEquals(useWithAnEnum.name(), EnumOfSubTypeInterface.HELLO.name());
     }
+
 }

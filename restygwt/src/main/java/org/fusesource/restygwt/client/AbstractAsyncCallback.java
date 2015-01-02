@@ -30,7 +30,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  *
- * @author <a href="http://blog.mkristian.tk>Kristian</a>
+ * @author <a href="http://blog.mkristian.tk">Kristian</a>
  */
 public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScriptObject> {
 
@@ -52,7 +52,7 @@ public abstract class AbstractAsyncCallback<T> implements AsyncCallback<JavaScri
 
     private Logger getLogger() {
         if ( GWT.isClient() && LogConfiguration.loggingIsEnabled() && this.logger == null) {
-            this.logger = Logger.getLogger( AbstractRequestCallback.class.getName() );
+            this.logger = Logger.getLogger( AbstractAsyncCallback.class.getName() );
         }
         return this.logger;
     }

@@ -30,11 +30,10 @@ import org.fusesource.restygwt.rebind.util.OnceFirstIterator;
 
 import java.lang.annotation.Annotation;
 
-import static com.google.gwt.user.rebind.ClassSourceFileComposerFactory.JavaSourceCategory;
 import static org.fusesource.restygwt.rebind.DirectRestServiceClassCreator.isVoidMethod;
 
 /**
- * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</<a>
+ * @author <a href="mailto:bogdan.mustiata@gmail.com">Bogdan Mustiata</a>
  */
 public class DirectRestServiceInterfaceClassCreator extends DirectRestBaseSourceCreator {
     public static final String DIRECT_REST_SERVICE_SUFFIX = "_DirectRestService";

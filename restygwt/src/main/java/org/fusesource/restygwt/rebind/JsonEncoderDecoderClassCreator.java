@@ -60,12 +60,13 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.google.gwt.thirdparty.guava.common.collect.Maps;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author <a href="http://hiramchirino.com">Hiram Chirino</a>
  *
- *         Updates: added getter & setter support, enhanced generics support
+ *         Updates: added getter + setter support, enhanced generics support
  * @author <a href="http://www.acuedo.com">Dave Finch</a>
  *
  *         added polymorphic support
@@ -91,7 +92,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 
     @Override
     public void generate() throws UnableToCompleteException {
-        final JsonTypeInfo typeInfo = getAnnotation(source, JsonTypeInfo.class);
+        final JsonTypeInfo typeInfo = getClassAnnotation(source, JsonTypeInfo.class);
         final boolean isLeaf = isLeaf(source);
 
         final List<Subtype> possibleTypes = getPossibleTypes(typeInfo, isLeaf);
@@ -143,29 +144,24 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
         return v.visit(typeInfo.use());
     }
 
+    /**
+     * This method does NOT return the subtypes of the given class, but all the subtypes associated with the
+     * {@link com.fasterxml.jackson.annotation.JsonSubTypes} annotation, even if this annotation is assigned to
+     * a parent class or an interface.
+     */
     private Collection<Type> findJsonSubTypes(JClassType clazz) {
         if (clazz == null)
             return Collections.emptyList();
-        else if (clazz.isAnnotationPresent(JsonSubTypes.class)) {
-            JsonSubTypes annotation = getAnnotation(clazz, JsonSubTypes.class);
+        else {
+            JsonSubTypes annotation = getClassAnnotation(clazz, JsonSubTypes.class);
+            if (annotation == null) {
+                return Collections.emptyList();
+            }
             Set<Type> result = new HashSet<JsonSubTypes.Type>();
             Type[] value = annotation.value();
-            for (Type type : value) {
-                result.add(type);
-                Class<?> subclazz = type.value();
-                String newSubClassName = subclazz.getName().replaceAll("\\$", ".");
-                JClassType subJClazz = context.getTypeOracle().findType(newSubClassName);
-                if(!isSame(clazz, subclazz)) {
-                    result.addAll(findJsonSubTypes(subJClazz));
-                }
-            }
+            Collections.addAll(result, value);
             return result;
-        } else
-            return Collections.emptyList();
         }
-
-    private boolean isSame(JClassType clazz, Class<?> subclazz) {
-        return (clazz.getPackage().getName()+"."+clazz.getName()).equals(subclazz.getName());
     }
 
     protected void generateSingleton(String shortName)
@@ -267,7 +263,7 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         // If can ignore some fields right off the back..
                         // if there is a creator encode only final fields with JsonProperty annotation
                         if (ignoreField || getterName == null && (field.isStatic() || (field.isFinal() && !(creator != null && orderedFields.contains(field))) || field.isTransient()
-                                || field.isAnnotationPresent(JsonIgnore.class))) {
+								|| field.isAnnotationPresent(JsonIgnore.class) || field.isAnnotationPresent(XmlTransient.class))) {
                             continue;
                         }
 
@@ -508,8 +504,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
                         final String setterName = getSetterName(field);
 
                         // If can ignore some fields right off the back..
-                        if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient()) ||
-                                field.isAnnotationPresent(JsonIgnore.class)) {
+                        if (setterName == null && (field.isStatic() || field.isFinal() || field.isTransient())
+								|| field.isAnnotationPresent(JsonIgnore.class) || field.isAnnotationPresent(XmlTransient.class)) {
                             continue;
                         }
 
@@ -779,7 +775,9 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
 	JMethod m = type.findMethod(fieldName, args);
 	if (null != m) {
         if(getAnnotation(m, JsonIgnore.class) != null)
-            return false;
+			return false;
+		if (getAnnotation(m, XmlTransient.class) != null)
+			return false;
         if(isSetter)
             return true;
         JClassType returnType = m.getReturnType().isClassOrInterface();
@@ -818,13 +816,15 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
             if( m.getName().startsWith("set") &&
                     m.getParameterTypes().length == 1 &&
                     m.getReturnType() == JPrimitiveType.VOID &&
-                    		getAnnotation(m, JsonIgnore.class) == null){
+					getAnnotation(m, JsonIgnore.class) == null && 
+					getAnnotation(m, XmlTransient.class) == null) {
                 setters.put( m.getName().replaceFirst("^set", ""), m.getParameterTypes()[0] );
             }
             else if( m.getName().startsWith("get") &&
                     m.getParameterTypes().length == 0 &&
                     m.getReturnType() != JPrimitiveType.VOID &&
-                    		getAnnotation(m, JsonIgnore.class) == null){
+					getAnnotation(m, JsonIgnore.class) == null && 
+					getAnnotation(m, XmlTransient.class) == null) {
                 getters.put( m.getName().replaceFirst("^get", ""), m );
             }
         }
@@ -872,7 +872,8 @@ public class JsonEncoderDecoderClassCreator extends BaseSourceCreator {
     private List<JField> getFields(List<JField> allFields, JClassType type) {
         JField[] fields = type.getFields();
         for (JField field : fields) {
-            if (!field.isTransient() && !field.isAnnotationPresent(JsonIgnore.class)) {
+			if (!field.isTransient() && !field.isAnnotationPresent(JsonIgnore.class) &&
+					!field.isAnnotationPresent(XmlTransient.class)) {
                 allFields.add(field);
             }
         }
